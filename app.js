@@ -24,13 +24,13 @@ app.use((req, res, next) => {
 });
 app.use(bodyParser.json());//to extract the JSON object from the request
 
-app.post('/api/cart', (req, res, next) => {
-//created a new instance of your  Thing  model, passing it a JavaScript object containing all of the information it needs from the parsed request body
-  const thing = new Product({
-    title: req.body.title,
+app.post('/api/products', (req, res, next) => {
+//created a new instance of your  Product model, passing it a JavaScript object containing all of the information it needs from the parsed request body
+  const product= new Product({
+    name: req.body.name,
     description: req.body.description,
-    imageUrl: req.body.imageUrl,
     price: req.body.price,
+    inStock: req.body.inStock,
     userId: req.body.userId
   });
   //save()method returns a promise, so in our  then()  block, we send back a success response, and in our  catch()  block, 
@@ -38,7 +38,7 @@ app.post('/api/cart', (req, res, next) => {
   thing.save().then(
     () => {
       res.status(201).json({
-        message: 'Post saved successfully!'
+        message: 'Product added successfully!'
       });
     }
   ).catch(
@@ -50,13 +50,13 @@ app.post('/api/cart', (req, res, next) => {
   );
 
 });
-//get details of individual thing through id
-app.get('/api/cart/:id', (req, res, next) => {
-  Thing.findOne({
+//get details of individual products hrough id
+app.get('/api/products/:id', (req, res, next) => {
+  product.findOne({
     _id: req.params.id
   }).then(
-    (thing) => {
-      res.status(200).json(thing);
+    (product) => {
+      res.status(200).json({ product: Product });
     }
   ).catch(
     (error) => {
@@ -67,19 +67,19 @@ app.get('/api/cart/:id', (req, res, next) => {
   );
 });
 //update data of products
-app.put('/api/cart/:id', (req, res, next) => {
-  const thing = new Thing({
+app.put('/api/products/:id', (req, res, next) => {
+  const product = new Product({
     _id: req.params.id,
-    title: req.body.title,
+    name: req.body.title,
     description: req.body.description,
-    imageUrl: req.body.imageUrl,
     price: req.body.price,
+    inStock: req.body.inStock,
     userId: req.body.userId
   });
-  Thing.updateOne({_id: req.params.id}, thing).then(
+  Product.updateOne({_id: req.params.id}, product).then(
     () => {
       res.status(201).json({
-        message: 'Thing updated successfully!'
+        message: 'Product updated successfully!'
       });
     }
   ).catch(
@@ -92,8 +92,8 @@ app.put('/api/cart/:id', (req, res, next) => {
 });
 
 //delete route
-app.delete('/api/cart/:id', (req, res, next) => {
-  Thing.deleteOne({_id: req.params.id}).then(
+app.delete('/api/products/:id', (req, res, next) => {
+  Product.deleteOne({_id: req.params.id}).then(
     () => {
       res.status(200).json({
         message: 'Deleted!'
@@ -107,11 +107,11 @@ app.delete('/api/cart/:id', (req, res, next) => {
     }
   );
 });
-//GET route to return all of the Things in the database
+//GET route to return all of the Tproducts in the database
 app.use('/api/cart', (req, res, next) => {
-  Thing.find().then(
-    (things) => {
-      res.status(200).json(things);
+  product.find().then(
+    (products) => {
+      res.status(200).json({ products: Product[] });
     }
   ).catch(
     (error) => {
