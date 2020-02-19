@@ -31,15 +31,17 @@ app.post('/api/products', (req, res, next) => {
     description: req.body.description,
     price: req.body.price,
     inStock: req.body.inStock,
-    userId: req.body.userId
+  
   });
   //save()method returns a promise, so in our  then()  block, we send back a success response, and in our  catch()  block, 
   //we send back an error response with the error thrown by Mongoose.
-  thing.save().then(
-    () => {
+  product.save().then(
+    (product) => {
       res.status(201).json({
-        message: 'Product added successfully!'
-      });
+        product:product,
+        message: 'Product saved successfully!'
+       
+      })
     }
   ).catch(
     (error) => {
@@ -50,13 +52,13 @@ app.post('/api/products', (req, res, next) => {
   );
 
 });
-//get details of individual products hrough id
+//get details of individual products through id
 app.get('/api/products/:id', (req, res, next) => {
-  product.findOne({
+  Product.findOne({
     _id: req.params.id
   }).then(
     (product) => {
-      res.status(200).json({ product: Product });
+      res.status(200).json({ product});
     }
   ).catch(
     (error) => {
@@ -70,16 +72,16 @@ app.get('/api/products/:id', (req, res, next) => {
 app.put('/api/products/:id', (req, res, next) => {
   const product = new Product({
     _id: req.params.id,
-    name: req.body.title,
+    name: req.body.name,
     description: req.body.description,
     price: req.body.price,
     inStock: req.body.inStock,
-    userId: req.body.userId
+  
   });
   Product.updateOne({_id: req.params.id}, product).then(
     () => {
       res.status(201).json({
-        message: 'Product updated successfully!'
+        message: 'Modified!' 
       });
     }
   ).catch(
@@ -107,11 +109,11 @@ app.delete('/api/products/:id', (req, res, next) => {
     }
   );
 });
-//GET route to return all of the Tproducts in the database
-app.use('/api/cart', (req, res, next) => {
-  product.find().then(
+//GET route to return all of the products in the database
+app.get('/api/products', (req, res, next) => {
+  Product.find().then(
     (products) => {
-      res.status(200).json({ products: Product[] });
+      res.status(200).json({ products: products});
     }
   ).catch(
     (error) => {
